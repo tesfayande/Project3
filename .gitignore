@@ -32,10 +32,12 @@ build/
 ### VS Code ###
 .vscode/
 
+.DS_Store
 mvnw
 mvnw.cmd
 target/*
 .mvn/*
 .idea/*
 Instructions.md
+/src/**/.DS_Store
 
