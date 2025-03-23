@@ -1,7 +1,5 @@
 package com.ChaTop.Backend.Controllers;
 
-
-import com.ChaTop.Backend.Dto.RentalDto;
 import com.ChaTop.Backend.Dto.UserDto;
 
 import com.ChaTop.Backend.Repositories.UserRepository;

@@ -32,12 +32,18 @@ build/
 ### VS Code ###
 .vscode/
 
-.DS_Store
+
 mvnw
 mvnw.cmd
 target/*
 .mvn/*
 .idea/*
 Instructions.md
-/src/**/.DS_Store
+.DS_Store
+src/main/.DS_Store
+src/main/java/.DS_Store
+src/main/java/com/.DS_Store
+src/main/java/com/chaTop/.DS_Store
+src/main/java/com/ChaTop/Backend/.DS_Store
+
 

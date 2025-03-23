@@ -1,7 +1,7 @@
 package com.ChaTop.Backend.Controllers;
 
 import com.ChaTop.Backend.Dto.MessageDto;
-import com.ChaTop.Backend.Models.Message;
+
 
 import com.ChaTop.Backend.Services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
