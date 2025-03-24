@@ -14,9 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,27 +31,40 @@ public class RentalService {
     private FileUploadService fileUploadService;
 
 
-    public Rental createRental(Rental rental, MultipartFile imageFile) {
 
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName());
 
+    /* Get all rentals */
 
-        String fileName = fileUploadService.uploadFile(imageFile);
-        //ServletUriComponentsBuilder.fromCurrentContextPath().path(fileName).toUriString();
-        String filepath= ServletUriComponentsBuilder.fromCurrentContextPath().path("images/"+fileName).toUriString();
-        //return "Upload Successfully=" + filepath;
+    public List<RentalDto> getAllRentals() {
+        return rentalRepository.findAll()
+                .stream()
+                .map(this::rentalToDto)
+                .collect(Collectors.toList());
+    }
 
-        rental.setOwner(user);
-        rental.setPicture(filepath);
+    /* Save rental */
 
-        return rentalRepository.save(rental);
+    public RentalDto saveRental(RentalDto rentalDto, MultipartFile imageFile) {
+        Rental rental = toEntity(rentalDto,imageFile);
+        rentalRepository.save(rental);
+
+        return findRentalById(rental.getId());
     }
 
 
 
 
+    /* Get rental by id.  */
+
+    public RentalDto findRentalById(int id) {
+        Rental rental = rentalRepository.findById(id).orElseThrow();
+        return rentalToDto(rental);
+    }
+
+
+
+    /*Check if the current is the owner of the rental  */
     public Boolean checkRentalOwner(int id) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -70,30 +81,10 @@ public class RentalService {
     }
 
 
-    public List<RentalDto> getAllRentals() {
-        return rentalRepository.findAll()
-                .stream()
-                .map(this::rentalToDto)
-                .collect(Collectors.toList());
-    }
 
 
-    public Rental getRentalById(int id) {
 
-        Optional<Rental> rental = rentalRepository.findById(id);
-        if(rental.isPresent()){
-            return rental.get();
-        }else {
-            throw new RuntimeException();
-        }
-    }
-
-
-    public RentalDto findRentalById(int id) {
-        Rental rental = rentalRepository.findById(id).orElseThrow();
-        return rentalToDto(rental);
-    }
-
+    /*Update rental  */
 
     public RentalDto updateRental(RentalDto rentalDto, int id) {
 
@@ -102,32 +93,18 @@ public class RentalService {
         existingRental.setSurface(rentalDto.getSurface());
         existingRental.setPrice(rentalDto.getPrice());
         existingRental.setDescription(rentalDto.getDescription());
-        //existingRental.setOwner(rental.getOwner());
-        // save
         rentalRepository.save(existingRental);
         return findRentalById(id);
 
-
-
-
-             /*
-        Comment comment = tutorialRepository.findById(tutorialId).map(tutorial -> {
-            commentRequest.setTutorial(tutorial);
-            return commentRepository.save(commentRequest);
-        }).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + tutorialId));
-
-        return new ResponseEntity<>(comment, HttpStatus.CREATED)
-                */
     }
 
 
+    /*Delete rental  */
     public void deleteRental(int id) {
 
         Rental rental = rentalRepository.findById(id).orElseThrow(()-> new RuntimeException());
         rental.setOwner(null);
         rentalRepository.save(rental);
-        //check
-        //delete
         rentalRepository.deleteById(id);
 
 
@@ -135,12 +112,6 @@ public class RentalService {
 
 
 
-    public RentalDto saveRental(RentalDto rentalDto, MultipartFile imageFile) {
-        Rental rental = toEntity(rentalDto,imageFile);
-        rentalRepository.save(rental);
-
-        return findRentalById(rental.getId());
-    }
 
 
 
@@ -173,9 +144,8 @@ public class RentalService {
         User user = userRepository.findByEmail(authentication.getName());
 
         String fileName = fileUploadService.uploadFile(imageFile);
-        //ServletUriComponentsBuilder.fromCurrentContextPath().path(fileName).toUriString();
         String filepath= ServletUriComponentsBuilder.fromCurrentContextPath().path("images/"+fileName).toUriString();
-        //return "Upload Successfully=" + filepath;
+
 
         rental.setId(rentalDto.getId());
         rental.setName(rentalDto.getName());

@@ -49,18 +49,6 @@ public class Rental {
     private Instant UpdatedAt;
 
 
-/*
-    @Column(name = "owner_id")
-    private int ownerId;
-
-    public int getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
-    }*/
-
     public int getId() {
         return id;
     }

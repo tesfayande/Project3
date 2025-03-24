@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,21 +44,13 @@ public class MessageService {
 
 
 
-    public MessageDto sendMessage(MessageDto messageDto,int rentalId) {
-
-        Message message =mapToEntity(messageDto,rentalId);
-        messageRepository.save(message);
-
-        return findMessageById(message.getId());
-
-
-    }
+    
 
 
 
-    public MessageDto storeMessage(MessageDto messageDto) {
+    public MessageDto saveMessage(MessageDto messageDto) {
 
-        Message message =toEntity(messageDto);
+        Message message =messageToEntity(messageDto);
         messageRepository.save(message);
 
         return findMessageById(message.getId());
@@ -88,7 +79,7 @@ public class MessageService {
     public MessageDto findMessageById(int id) {
 
         Message message  = messageRepository.findById(id).orElseThrow();
-        return mapMessageToDto(message);
+        return messageToDto(message);
 
 
     }
@@ -108,13 +99,10 @@ public class MessageService {
 
     public void deleteMessage(int id) {
 
-
         Message message = messageRepository.findById(id).orElseThrow(()-> new RuntimeException());
         message.setRental(null);
         message.setSender(null);
         messageRepository.save(message);
-
-        //delete
         messageRepository.deleteById(id);
     }
 
@@ -155,12 +143,12 @@ public class MessageService {
 
 
 
-
+     /*
+    Check if rental exists before send
+     */
 
     public Boolean checkIfRentalExists(int id) {
 
-        //Rental rental = rentalRepository.findById(id).orElseThrow(()-> new RuntimeException());
-        //rentalRepository.existsById(id);
         if(rentalRepository.existsById(id)){
             return true;
         }else {
@@ -169,10 +157,7 @@ public class MessageService {
     }
 
 
-    /*
-     * Using Message DTO
-     *
-     * */
+
 
     /*
   Converting Message Entity to  Message Dto
@@ -194,10 +179,10 @@ public class MessageService {
     /*
     Converting Message Tdo to  Message Entity
      */
-    public Message toEntity(MessageDto messageDto) {
+    public Message messageToEntity(MessageDto messageDto) {
+
+
         Message message = new Message();
-
-
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
@@ -213,45 +198,5 @@ public class MessageService {
     }
 
 
-
-
-    /*
-  Converting Message Entity to  Message Dto
-   */
-    public MessageDto mapMessageToDto(Message message) {
-        MessageDto messageDto = new MessageDto();
-
-        messageDto.setId(message.getId());
-        messageDto.setRentalId(message.getRental().getId());
-        messageDto.setRental(message.getRental());
-        messageDto.setSender(message.getSender());
-        messageDto.setMessage(message.getMessage());
-
-        return messageDto;
-    }
-
-
-
-
-    /*
-    Converting Message Tdo to  Message Entity
-     */
-    public Message mapToEntity(MessageDto messageDto,int rentalId) {
-        Message message = new Message();
-
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName());
-
-        //Rental rental = rentalRepository.findById(rentalId).orElseThrow(()-> new RuntimeException());
-
-        message.setId(messageDto.getId());
-        message.setRental(messageDto.getRental());
-        message.setSender(user);
-        message.setMessage(messageDto.getMessage());
-
-        return message;
-    }
 
 }

@@ -8,6 +8,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
+
+
+
 @Entity
 @Table(name = "messages")
 public class Message {
@@ -17,7 +20,7 @@ public class Message {
     private int id;
 
 
-    // two-directional OneToMany
+    
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "rental_id",nullable =true)
     private Rental rental;
@@ -25,7 +28,7 @@ public class Message {
 
 
 
-    // two-directional OneToMany
+    
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User sender;
@@ -47,6 +50,7 @@ public class Message {
     @Column(name = "updated_at")
     private Instant UpdatedAt;
 
+    
     public int getId() {
         return id;
     }

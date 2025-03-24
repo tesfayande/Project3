@@ -2,7 +2,6 @@ package com.ChaTop.Backend.Controllers;
 
 import com.ChaTop.Backend.Dto.UserDto;
 
-import com.ChaTop.Backend.Repositories.UserRepository;
 import com.ChaTop.Backend.Services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,8 @@ public class AuthControllr {
     @Autowired
     AuthService authService;
 
+
+    /*  Register  user */
 
     @PostMapping("/auth/register")
     public Object register(@RequestBody UserDto userDto){
@@ -53,6 +54,7 @@ public class AuthControllr {
 
     }
 
+    /* User  login  */
     @PostMapping("/auth/login")
     public Object login(@RequestBody UserDto userDto){
 
@@ -81,7 +83,7 @@ public class AuthControllr {
 
     }
 
-
+    /* Get current user */
     @GetMapping("/auth/me")
     public UserDto me()
     {
@@ -94,9 +96,10 @@ public class AuthControllr {
 
     }
 
-    //Get  Rental By id
+    /*Get  user by id */
+
     @GetMapping("/user/{id}")
-    // localhost:8080/api/auth/1
+    // localhost:8080/api/user/1
     public ResponseEntity<UserDto> getRentalById(@PathVariable("id") int userID){
         return new ResponseEntity<UserDto>(authService.findUserById(userID),HttpStatus.OK);
     }

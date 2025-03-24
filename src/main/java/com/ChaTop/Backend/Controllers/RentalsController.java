@@ -28,14 +28,18 @@ public class RentalsController {
    RentalService rentalService;
 
 
-    //Get All Rentals
+    /*
+     Get all rentals.
+    */
     @GetMapping
     public List<RentalDto> getAllRentals(){
 
         return rentalService.getAllRentals();
     }
 
-    //Save Rental
+    /*
+     Create rental.
+    */
     @PostMapping("/save")
     public ResponseEntity<RentalDto> saveRental(@ModelAttribute RentalDto rentalDto,@RequestParam("image") MultipartFile imageFile){
 
@@ -44,14 +48,21 @@ public class RentalsController {
     }
 
 
-    //Get  Rental By id
+    /*
+     Get  rental by id.
+    */
+
     @GetMapping("/{id}")
     // localhost:8080/api/rentals/1
     public ResponseEntity<RentalDto> getRentalById(@PathVariable("id") int rentalID){
         return new ResponseEntity<RentalDto>(rentalService.findRentalById(rentalID),HttpStatus.OK);
     }
 
-    //Update  Rental
+
+    /*
+   Update rental if the current user is the owner of the rental.
+   */
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateRental(@PathVariable("id") int id,
                                                @RequestBody RentalDto rentalDto){
@@ -77,7 +88,10 @@ public class RentalsController {
         return new ResponseEntity<Object>(object,HttpStatus.OK);
     }
 
-    //Delete Rental
+    /*
+    Delete rental if the current user is the owner of the rental.
+     */
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteRental(@PathVariable("id") int id){
 

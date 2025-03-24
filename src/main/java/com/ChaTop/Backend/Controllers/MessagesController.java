@@ -24,11 +24,20 @@ public class MessagesController {
 
 
 
-    //GetAll Rest Api
+    /*
+    Get all messages
+     */
     @GetMapping
     public List<MessageDto> getMessages(){
         return messageService.getMessages();
     }
+
+
+
+
+    /*
+   Send message if the current user is not owner of the rental that associated with the message.
+     */
 
     @PostMapping("/send")
     public Object sentMessage(@RequestBody MessageDto messageDto){
@@ -49,7 +58,7 @@ public class MessagesController {
             {
                 object.put("message","Message Was Sent Successfully!");
                 object.put("succes",succes=true);
-                object.put("data", messageService.storeMessage(messageDto));
+                object.put("data", messageService.saveMessage(messageDto));
             }
         } else
         {
@@ -62,7 +71,10 @@ public class MessagesController {
 
 
 
-    //Get Message by id
+    /*
+    Get message by id
+
+     */
 
     @GetMapping("/show/{id}")
     // localhost:8080/api/messages/1
@@ -74,7 +86,9 @@ public class MessagesController {
         return new ResponseEntity<MessageDto>(messageService.findMessageById(messageID),HttpStatus.OK);
     }
 
-    //Update Message
+    /*
+    Update message if the current user is the sender of the message
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateMessage(@PathVariable("id") int id,
                                                  @RequestBody MessageDto messageDto){
@@ -103,7 +117,10 @@ public class MessagesController {
         return new ResponseEntity<Object>(object,HttpStatus.OK);
     }
 
-    //Delete Message
+
+    /*
+    Delete message if the current user is The sender of the message.
+     */
 
     @DeleteMapping("/delete/{id}")
     public Object deleteMessage(@PathVariable("id") int id){
