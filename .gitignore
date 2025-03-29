@@ -45,6 +45,6 @@ Instructions.md
 /src/main/java/com/.DS_Store
 /src/main/java/com/chaTop/.DS_Store
 /src/main/java/com/ChaTop/Backend/.DS_Store
-/main/resources/static/images
+/main/resources/static/images/*
 
 
