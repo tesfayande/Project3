@@ -45,6 +45,6 @@ src/main/java/.DS_Store
 src/main/java/com/.DS_Store
 src/main/java/com/chaTop/.DS_Store
 src/main/java/com/ChaTop/Backend/.DS_Store
-src//main/resources/static/images
+src/main/resources/static/images/** 
 
 
