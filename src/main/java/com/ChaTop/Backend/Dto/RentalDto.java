@@ -2,6 +2,7 @@ package com.ChaTop.Backend.Dto;
 
 
 import com.ChaTop.Backend.Models.User;
+import com.ChaTop.Backend.Responses.UserResponse;
 
 public class RentalDto {
 
@@ -20,10 +21,17 @@ public class RentalDto {
     private String description;
 
     
-    private User owner;
 
 
+    private int owner_id;
 
+    public int getOwner_id() {
+        return owner_id;
+    }
+
+    public void setOwner_id(int owner_id) {
+        this.owner_id = owner_id;
+    }
 
     public int getId() {
         return id;
@@ -73,11 +81,5 @@ public class RentalDto {
         this.description = description;
     }
 
-    public User getOwner() {
-        return owner;
-    }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
 }

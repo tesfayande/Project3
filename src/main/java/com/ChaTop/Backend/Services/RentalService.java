@@ -8,12 +8,11 @@ import com.ChaTop.Backend.Repositories.RentalRepository;
 import com.ChaTop.Backend.Repositories.UserRepository;
 
 
+import com.ChaTop.Backend.Responses.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,8 +44,8 @@ public class RentalService {
 
     /* Save rental */
 
-    public RentalDto saveRental(RentalDto rentalDto, MultipartFile imageFile) {
-        Rental rental = toEntity(rentalDto,imageFile);
+    public RentalDto saveRental(RentalDto rentalDto) {
+        Rental rental = toEntity(rentalDto);
         rentalRepository.save(rental);
 
         return findRentalById(rental.getId());
@@ -121,6 +120,13 @@ public class RentalService {
 
     private RentalDto rentalToDto(Rental rental) {
         RentalDto dto = new RentalDto();
+        User user=userRepository.findByEmail(rental.getOwner().getEmail());
+
+        UserResponse response =new UserResponse();
+
+        response.setId(user.getId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
 
         dto.setId(rental.getId());
         dto.setName(rental.getName());
@@ -128,7 +134,8 @@ public class RentalService {
         dto.setPrice(rental.getPrice());
         dto.setPicture(rental.getPicture());
         dto.setDescription(rental.getDescription());
-        dto.setOwner(rental.getOwner());
+        dto.setOwner_id(user.getId());
+        //dto.setOwner(response);
 
         return dto;
     }
@@ -137,54 +144,12 @@ public class RentalService {
     /*
     Converting Rental DTO to  RentalDto Entity
      */
-    private Rental toEntity(RentalDto rentalDto,MultipartFile imageFile) {
+    private Rental toEntity(RentalDto rentalDto) {
 
         Rental rental = new Rental();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
 
-        String fileName = fileUploadService.uploadFile(imageFile);
-        String filepath= ServletUriComponentsBuilder.fromCurrentContextPath().path("images/"+fileName).toUriString();
-
-
-        rental.setId(rentalDto.getId());
-        rental.setName(rentalDto.getName());
-        rental.setSurface(rentalDto.getSurface());
-        rental.setPrice(rentalDto.getPrice());
-        rental.setPicture(filepath);
-        rental.setDescription(rentalDto.getDescription());
-        rental.setOwner(user);
-        return rental;
-    }
-
-
-
-   //Converting RentalDto Entity to  Rental Dto
-
-    public RentalDto mapToDto(Rental rental) {
-
-       RentalDto dto = new RentalDto();
-
-        dto.setId(rental.getId());
-        dto.setName(rental.getName());
-        dto.setSurface(rental.getSurface());
-        dto.setPrice(rental.getPrice());
-        dto.setPicture(rental.getPicture());
-        dto.setDescription(rental.getDescription());
-        dto.setOwner(rental.getOwner());
-
-        return dto;
-    }
-
-
-
-    //Converting Rental Tdo to  RentalDto Entity
-
-    public Rental mapToEntity(RentalDto rentalDto) {
-
-        Rental rental = new Rental();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName());
 
 
         rental.setId(rentalDto.getId());
@@ -192,10 +157,12 @@ public class RentalService {
         rental.setSurface(rentalDto.getSurface());
         rental.setPrice(rentalDto.getPrice());
         rental.setPicture(rentalDto.getPicture());
-        rental.setDescription(rental.getDescription());
+        rental.setDescription(rentalDto.getDescription());
         rental.setOwner(user);
         return rental;
     }
+
+
 
 
 

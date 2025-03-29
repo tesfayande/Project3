@@ -2,6 +2,7 @@ package com.ChaTop.Backend.Controllers;
 
 import com.ChaTop.Backend.Dto.UserDto;
 
+import com.ChaTop.Backend.Responses.UserResponse;
 import com.ChaTop.Backend.Services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,7 @@ public class AuthControllr {
             object.put("message","User Was Created Successfully!");
             object.put("succes",succes=true);
             object.put("data",authService.register(userDto));
+            object.put("token", authService.login(userDto));
 
         }
         return object;
@@ -85,7 +87,7 @@ public class AuthControllr {
 
     /* Get current user */
     @GetMapping("/auth/me")
-    public UserDto me()
+    public UserResponse me()
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -100,8 +102,8 @@ public class AuthControllr {
 
     @GetMapping("/user/{id}")
     // localhost:8080/api/user/1
-    public ResponseEntity<UserDto> getRentalById(@PathVariable("id") int userID){
-        return new ResponseEntity<UserDto>(authService.findUserById(userID),HttpStatus.OK);
+    public ResponseEntity<UserResponse> getRentalById(@PathVariable("id") int userID){
+        return new ResponseEntity<UserResponse>(authService.findUserById(userID),HttpStatus.OK);
     }
 
 

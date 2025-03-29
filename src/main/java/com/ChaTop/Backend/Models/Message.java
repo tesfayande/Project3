@@ -30,7 +30,7 @@ public class Message {
 
     
     @ManyToOne(cascade= CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",nullable =true)
     private User sender;
 
 

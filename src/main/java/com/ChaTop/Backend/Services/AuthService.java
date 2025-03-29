@@ -3,6 +3,7 @@ package com.ChaTop.Backend.Services;
 
 import com.ChaTop.Backend.Dto.UserDto;
 import com.ChaTop.Backend.Models.User;
+import com.ChaTop.Backend.Responses.UserResponse;
 import com.ChaTop.Backend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,7 +36,7 @@ public class AuthService {
 
     /*User Register */
 
-    public UserDto register(UserDto userDto){
+    public UserResponse register(UserDto userDto){
 
 
         User dto = userToEntity(userDto);
@@ -121,18 +122,18 @@ public class AuthService {
 
 
       /*Get User By Email */
-    public UserDto findUserByEmail(String email) {
+    public UserResponse findUserByEmail(String email) {
 
         User user =userRepository.findByEmail(email);
-        return userToDto(user);
+        return userResponse(user);
 
     }
 
        /*Get User By ID */
-    public UserDto findUserById(int id) {
+    public UserResponse findUserById(int id) {
 
         User user  = userRepository.findById(id).orElseThrow();
-        return userToDto(user);
+        return userResponse(user);
 
 
     }
@@ -142,7 +143,7 @@ public class AuthService {
        */
 
 
-    public UserDto updateUser(UserDto userDto,int id) {
+    public UserResponse updateUser(UserDto userDto,int id) {
 
         User existingUser = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
         existingUser.setName(userDto.getName());
@@ -161,7 +162,7 @@ public class AuthService {
       User Change Password
        */
 
-    public UserDto updateUserPassWord(UserDto userDto, int id) {
+    public UserResponse updateUserPassWord(UserDto userDto, int id) {
 
         User existingUser = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
         existingUser.setPassword(encoder.encode(userDto.getPassword()));
@@ -174,7 +175,7 @@ public class AuthService {
       User Change Email
        */
 
-    public UserDto updateUserEmail(UserDto userDto, int id) {
+    public UserResponse updateUserEmail(UserDto userDto, int id) {
 
         User existingUser = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
         existingUser.setEmail(userDto.getEmail());
@@ -186,7 +187,7 @@ public class AuthService {
        */
 
 
-    public UserDto updateUserName(UserDto user, int id) {
+    public UserResponse updateUserName(UserDto user, int id) {
 
         User existingUser = userRepository.findById(id).orElseThrow(()-> new RuntimeException());
         existingUser.setName(user.getName());
@@ -206,6 +207,19 @@ public class AuthService {
         userRepository.findById(id).orElseThrow(()-> new RuntimeException());
         //delete
         userRepository.deleteById(id);
+    }
+
+
+    /*
+  Converting User Entity to  User Dto
+  */
+    public UserResponse userResponse(User user) {
+        UserResponse response = new UserResponse();
+        response.setId(user.getId());
+        response.setName(user.getName());;
+        response.setEmail(user.getEmail());
+        //dto.setPassword(user.getPassword());
+        return response;
     }
 
 
