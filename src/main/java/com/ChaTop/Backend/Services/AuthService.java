@@ -47,7 +47,7 @@ public class AuthService {
         }
         else
         {
-            throw new UsernameNotFoundException("User with Email \"" + userDto.getEmail() + "\" is taken found!" );
+            return findUserById(dto.getId());
         }
 
 
@@ -125,7 +125,7 @@ public class AuthService {
     public UserResponse findUserByEmail(String email) {
 
         User user =userRepository.findByEmail(email);
-        return userResponse(user);
+        return userToDto(user);
 
     }
 
@@ -133,7 +133,7 @@ public class AuthService {
     public UserResponse findUserById(int id) {
 
         User user  = userRepository.findById(id).orElseThrow();
-        return userResponse(user);
+        return userToDto(user);
 
 
     }
@@ -150,7 +150,7 @@ public class AuthService {
         existingUser.setEmail(userDto.getEmail());
         existingUser.setPassword(encoder.encode(userDto.getPassword()));
         userRepository.save(existingUser);
-        return findUserById(userDto.getId());
+        return findUserById(id);
 
 
 
@@ -213,27 +213,18 @@ public class AuthService {
     /*
   Converting User Entity to  User Dto
   */
-    public UserResponse userResponse(User user) {
+    public UserResponse userToDto(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setName(user.getName());;
         response.setEmail(user.getEmail());
-        //dto.setPassword(user.getPassword());
+        response.setCreated_at(user.getCreatedAt());
+        response.setUpdated_at(user.getUpdatedAt());
+
         return response;
     }
 
 
-    /*
-   Converting User Entity to  User Dto
-   */
-    public UserDto userToDto(User user) {
-        UserDto dto = new UserDto();
-        dto.setId(user.getId());
-        dto.setName(user.getName());;
-        dto.setEmail(user.getEmail());
-        //dto.setPassword(user.getPassword());
-        return dto;
-    }
 
 
      /*

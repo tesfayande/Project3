@@ -7,10 +7,6 @@ import com.ChaTop.Backend.Models.User;
 import com.ChaTop.Backend.Repositories.MessageRepository;
 import com.ChaTop.Backend.Repositories.RentalRepository;
 import com.ChaTop.Backend.Repositories.UserRepository;
-import com.ChaTop.Backend.Requests.MessageRequest;
-import com.ChaTop.Backend.Responses.MessageResponse;
-import com.ChaTop.Backend.Responses.RentalResponse;
-import com.ChaTop.Backend.Responses.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,14 +29,14 @@ public class MessageService {
 
 
 
-    public Message sendMessage(MessageRequest messageReq){
+    public Message sendMessage(MessageDto messageDto){
 
-        User user = userRepository.findById(messageReq.getUser_id()).orElseThrow(()-> new RuntimeException());
+        User user = userRepository.findById(messageDto.getUser_id()).orElseThrow(()-> new RuntimeException());
 
-        Rental rental = rentalRepository.findById(messageReq.getRental_id()).orElseThrow(()-> new RuntimeException());
+        Rental rental = rentalRepository.findById(messageDto.getRental_id()).orElseThrow(()-> new RuntimeException());
 
         Message message = new Message();
-        message.setMessage(messageReq.getMessage());
+        message.setMessage(messageDto.getMessage());
         message.setSender(user);
         message.setRental(rental);
 
@@ -154,39 +150,9 @@ public class MessageService {
     public MessageDto messageToDto(Message message) {
         MessageDto messageDto = new MessageDto();
 
-
-        User user=userRepository.findByEmail(message.getSender().getEmail());
-
-        UserResponse ownerResponse =new UserResponse();
-        UserResponse senderResponse =new UserResponse();
-
-
-        senderResponse.setId(user.getId());
-        senderResponse.setName(user.getName());
-        senderResponse.setEmail(user.getEmail());
-
-        RentalResponse rentalResponse =new RentalResponse();
-
-
-        ownerResponse.setId(message.getRental().getOwner().getId());
-        ownerResponse.setName(message.getRental().getOwner().getName());
-        ownerResponse.setEmail(message.getRental().getOwner().getEmail());
-
-
-
-        rentalResponse.setId(message.getRental().getId());
-        rentalResponse.setName(message.getRental().getName());
-        rentalResponse.setSurface(message.getRental().getSurface());
-        rentalResponse.setPrice(message.getRental().getPrice());
-        rentalResponse.setPicture(message.getRental().getPicture());
-        rentalResponse.setDescription(message.getRental().getDescription());
-         rentalResponse.setOwner(ownerResponse);
-
-
         messageDto.setId(message.getId());
-        messageDto.setRentalId(message.getRental().getId());
-        messageDto.setRental(rentalResponse);
-        messageDto.setSender(senderResponse);
+        messageDto.setRental_id(message.getRental().getId());
+        messageDto.setRental_id(message.getSender().getId());
         messageDto.setMessage(message.getMessage());
 
         return messageDto;
@@ -206,7 +172,7 @@ public class MessageService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
 
-        Rental rental = rentalRepository.findById(messageDto.getRentalId()).orElseThrow(()-> new RuntimeException());
+        Rental rental = rentalRepository.findById(messageDto.getRental_id()).orElseThrow(()-> new RuntimeException());
 
         message.setId(messageDto.getId());
         message.setRental(rental);

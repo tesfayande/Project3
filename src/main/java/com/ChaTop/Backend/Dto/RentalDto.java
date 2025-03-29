@@ -4,6 +4,9 @@ package com.ChaTop.Backend.Dto;
 import com.ChaTop.Backend.Models.User;
 import com.ChaTop.Backend.Responses.UserResponse;
 
+import java.security.Timestamp;
+import java.time.Instant;
+
 public class RentalDto {
 
 
@@ -20,18 +23,12 @@ public class RentalDto {
 
     private String description;
 
-    
-
-
     private int owner_id;
 
-    public int getOwner_id() {
-        return owner_id;
-    }
+    private Instant created_at;
 
-    public void setOwner_id(int owner_id) {
-        this.owner_id = owner_id;
-    }
+    private Instant updated_at;
+
 
     public int getId() {
         return id;
@@ -81,5 +78,27 @@ public class RentalDto {
         this.description = description;
     }
 
+    public int getOwner_id() {
+        return owner_id;
+    }
 
+    public void setOwner_id(int owner_id) {
+        this.owner_id = owner_id;
+    }
+
+    public Instant getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Instant created_at) {
+        this.created_at = created_at;
+    }
+
+    public Instant getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Instant updated_at) {
+        this.updated_at = updated_at;
+    }
 }

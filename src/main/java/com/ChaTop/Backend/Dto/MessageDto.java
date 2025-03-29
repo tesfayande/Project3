@@ -1,10 +1,7 @@
 package com.ChaTop.Backend.Dto;
 
 
-import com.ChaTop.Backend.Models.Rental;
-import com.ChaTop.Backend.Models.User;
-import com.ChaTop.Backend.Responses.RentalResponse;
-import com.ChaTop.Backend.Responses.UserResponse;
+import java.time.Instant;
 
 
 public class MessageDto {
@@ -13,19 +10,16 @@ public class MessageDto {
 
 
     private int id;
-    private int rentalId;
-    private int userId;
+    private int user_id;
+    private int rental_id;
+    private Instant created_at;
+    private Instant updated_at;
+    private String message;
+    /*
     private RentalResponse rental;
     private UserResponse sender;
-    private String message;
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+     */
 
     public int getId() {
         return id;
@@ -35,20 +29,36 @@ public class MessageDto {
         this.id = id;
     }
 
-    public RentalResponse getRental() {
-        return rental;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setRental(RentalResponse rental) {
-        this.rental = rental;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
-    public UserResponse getSender() {
-        return sender;
+    public int getRental_id() {
+        return rental_id;
     }
 
-    public void setSender(UserResponse sender) {
-        this.sender = sender;
+    public void setRental_id(int rental_id) {
+        this.rental_id = rental_id;
+    }
+
+    public Instant getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Instant created_at) {
+        this.created_at = created_at;
+    }
+
+    public Instant getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Instant updated_at) {
+        this.updated_at = updated_at;
     }
 
     public String getMessage() {
@@ -57,13 +67,5 @@ public class MessageDto {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public int getRentalId() {
-        return rentalId;
-    }
-
-    public void setRentalId(int rentalId) {
-        this.rentalId = rentalId;
     }
 }

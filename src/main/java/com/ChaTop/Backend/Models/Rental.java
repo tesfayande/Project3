@@ -109,15 +109,8 @@ public class Rental {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Instant getUpdatedAt() {
         return UpdatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
-        UpdatedAt = updatedAt;
-    }
 }

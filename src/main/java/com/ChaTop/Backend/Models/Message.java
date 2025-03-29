@@ -83,19 +83,5 @@ public class Message {
         this.message = message;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return UpdatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        UpdatedAt = updatedAt;
-    }
 }

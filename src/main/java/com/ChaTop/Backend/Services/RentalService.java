@@ -122,12 +122,6 @@ public class RentalService {
         RentalDto dto = new RentalDto();
         User user=userRepository.findByEmail(rental.getOwner().getEmail());
 
-        UserResponse response =new UserResponse();
-
-        response.setId(user.getId());
-        response.setName(user.getName());
-        response.setEmail(user.getEmail());
-
         dto.setId(rental.getId());
         dto.setName(rental.getName());
         dto.setSurface(rental.getSurface());
@@ -135,7 +129,9 @@ public class RentalService {
         dto.setPicture(rental.getPicture());
         dto.setDescription(rental.getDescription());
         dto.setOwner_id(user.getId());
-        //dto.setOwner(response);
+        dto.setCreated_at(rental.getCreatedAt());
+        dto.setUpdated_at(rental.getUpdatedAt());
+
 
         return dto;
     }
