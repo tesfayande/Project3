@@ -56,12 +56,16 @@ public class RentalsController {
      Create rental.
     */
     @PostMapping
-    public ResponseEntity<RentalDto> saveRental(
+    public ResponseEntity<Object> saveRental(
             @RequestParam("name") String name,
             @RequestParam("surface") int surface,
             @RequestParam("price") double price,
             @RequestParam("description") String description,
             @RequestParam("picture") MultipartFile imageFile){
+
+
+        Map<String, Object> object = new HashMap<>();
+        boolean succes =false;
 
 
         String fileName = fileUploadService.uploadFile(imageFile);
@@ -77,7 +81,15 @@ public class RentalsController {
         rentalDto.setDescription(description);
 
 
-        return new ResponseEntity<RentalDto>(rentalService.saveRental(rentalDto), HttpStatus.CREATED);
+        object.put("message","Rental  Was Created Successfully!");
+        object.put("succes",succes=true);
+        object.put("data", rentalService.saveRental(rentalDto));
+
+
+        return new ResponseEntity<Object>(object,HttpStatus.OK);
+
+
+        //return new ResponseEntity<RentalDto>(rentalService.saveRental(rentalDto), HttpStatus.CREATED);
 
     }
 

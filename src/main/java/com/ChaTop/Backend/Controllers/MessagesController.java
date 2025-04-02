@@ -57,21 +57,23 @@ public class MessagesController {
 
         Map<String, Object> object = new HashMap<>();
 
-        boolean succes =false;
-
+        /*
         if (messageService.checkRentalOwner(messageDto.getRental_id())){
 
-                object.put("message","You are The Owner Of the rental,So you cann't send message to your self.");
-                object.put("succes",succes=false);
+                object.put("message","The Owner Of the rental cannot send message.");
+
             }
             else
             {
                 messageService.sendMessage(messageDto);
                 object.put("message","Message Was Sent Successfully!");
-                object.put("succes",succes=true);
 
             }
+*/
 
+
+       messageService.sendMessage(messageDto);
+        object.put("message","Message Was Sent Successfully!");
         return object;
 
     }
