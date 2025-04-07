@@ -2,6 +2,8 @@ package com.ChaTop.Backend.Controllers;
 
 import com.ChaTop.Backend.Dto.UserDto;
 
+import com.ChaTop.Backend.Responses.AuthResponse;
+import com.ChaTop.Backend.Responses.MessageResponse;
 import com.ChaTop.Backend.Responses.UserResponse;
 import com.ChaTop.Backend.Services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +13,6 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 
@@ -29,56 +28,68 @@ public class AuthControllr {
     /*  Register  user */
 
     @PostMapping("/auth/register")
-    public Object register(@RequestBody UserDto userDto){
+    public ResponseEntity<?> register(@RequestBody UserDto userDto){
 
-        Map<String, Object> object = new HashMap<>();
-        boolean succes =false;
 
         if (authService.checkUserEmail(userDto.getEmail())){
 
-            object.put("message","Email with:"+ userDto.getEmail() + " Existes");
-            object.put("succes",succes=false);
+
+
+            return new ResponseEntity<MessageResponse>(new MessageResponse("Email with:"+ userDto.getEmail() + " Existes"),HttpStatus.OK);
+
+            //return new MessageResponse("Email with:"+ userDto.getEmail() + " Existes");
 
         } else if (authService.checkUserName(userDto.getName())) {
 
-            object.put("message","Name with:"+ userDto.getName() + " Existes");
-            object.put("succes",succes=false);
+
+            return new ResponseEntity<MessageResponse>(new MessageResponse("Name with:"+ userDto.getName() + " Existes"),HttpStatus.OK);
+
 
         } else{
 
-            object.put("message","User Was Created Successfully!");
-            object.put("succes",succes=true);
-            object.put("data",authService.register(userDto));
-            object.put("token", authService.login(userDto));
 
-        }
-        return object;
+            UserResponse user= authService.register(userDto);
+
+            String userToken=authService.login(userDto);
+            AuthResponse authResponse =new AuthResponse();
+
+            authResponse.setToken(userToken);
+            authResponse.setUser(user);
+            authResponse.setMessage("User Created Success Fully");
+
+
+            return new ResponseEntity<>(authResponse,HttpStatus.OK);
+
+
 
     }
-
+    }
     /* User  login  */
     @PostMapping("/auth/login")
-    public Object login(@RequestBody UserDto userDto){
+    public ResponseEntity<?> login(@RequestBody UserDto userDto){
 
-        Map<String, Object> object = new HashMap<>();
-        boolean succes =false;
+
 
         if (!authService.checkUserEmail(userDto.getEmail())){
 
-            object.put("message","Email with:"+ userDto.getEmail() + " Not Existes");
-            object.put("succes",succes=false);
-            //object.put("user",userService.getCurrentUserByName(userDto.getName()));
 
-            return object;
+            return new ResponseEntity<MessageResponse>(new MessageResponse("Email with:"+ userDto.getEmail() + " Not Existes"),HttpStatus.NOT_FOUND);
 
         }else{
 
-            object.put("message","User Was Logedin Successfully!");
-            object.put("succes",succes=true);
-            object.put("token", authService.login(userDto));
-            object.put("user", authService.findUserByEmail(userDto.getEmail()));
 
-            return object;
+
+            UserResponse user= authService.findUserByEmail(userDto.getEmail());
+
+            String userToken=authService.login(userDto);
+            AuthResponse authResponse =new AuthResponse();
+
+            authResponse.setToken(userToken);
+            authResponse.setUser(user);
+            authResponse.setMessage("User Was Logedin Successfully!");
+
+
+            return new ResponseEntity<>(authResponse,HttpStatus.OK);
 
         }
 
@@ -103,6 +114,8 @@ public class AuthControllr {
     @GetMapping("/user/{id}")
     // localhost:8080/api/user/1
     public ResponseEntity<UserResponse> getRentalById(@PathVariable("id") int userID){
+
+
         return new ResponseEntity<UserResponse>(authService.findUserById(userID),HttpStatus.OK);
     }
 

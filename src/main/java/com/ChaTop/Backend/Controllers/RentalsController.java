@@ -1,6 +1,8 @@
 package com.ChaTop.Backend.Controllers;
 
 import com.ChaTop.Backend.Dto.RentalDto;
+import com.ChaTop.Backend.Responses.RentalResponse;
+import com.ChaTop.Backend.Responses.RentalsResponse;
 import com.ChaTop.Backend.Services.AuthService;
 import com.ChaTop.Backend.Services.FileUploadService;
 import com.ChaTop.Backend.Services.RentalService;
@@ -13,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -38,34 +38,25 @@ public class RentalsController {
      Get all rentals.
     */
     @GetMapping
-    public ResponseEntity<Object> getAllRentals(){
+    public RentalsResponse getAllRentals(){
 
 
-        Map<String, Object> object = new HashMap<>();
+
+       return new RentalsResponse(this.rentalService.getAllRentals());
 
 
-        object.put("rentals",rentalService.getAllRentals());
-
-
-        return new ResponseEntity<Object>(object,HttpStatus.OK);
-
-        //return object;
     }
 
     /*
      Create rental.
     */
     @PostMapping
-    public ResponseEntity<Object> saveRental(
+    public RentalResponse saveRental(
             @RequestParam("name") String name,
             @RequestParam("surface") int surface,
             @RequestParam("price") double price,
             @RequestParam("description") String description,
             @RequestParam("picture") MultipartFile imageFile){
-
-
-        Map<String, Object> object = new HashMap<>();
-        boolean succes =false;
 
 
         String fileName = fileUploadService.uploadFile(imageFile);
@@ -81,15 +72,12 @@ public class RentalsController {
         rentalDto.setDescription(description);
 
 
-        object.put("message","Rental  Was Created Successfully!");
-        object.put("succes",succes=true);
-        object.put("data", rentalService.saveRental(rentalDto));
+
+        rentalService.saveRental(rentalDto);
+        return new RentalResponse("Rental  Was Created Successfully!");
 
 
-        return new ResponseEntity<Object>(object,HttpStatus.OK);
 
-
-        //return new ResponseEntity<RentalDto>(rentalService.saveRental(rentalDto), HttpStatus.CREATED);
 
     }
 
@@ -101,7 +89,11 @@ public class RentalsController {
     @GetMapping("/{id}")
     // localhost:8080/api/rentals/1
     public ResponseEntity<RentalDto> getRentalById(@PathVariable("id") int rentalID){
+
+
         return new ResponseEntity<RentalDto>(rentalService.findRentalById(rentalID),HttpStatus.OK);
+
+
     }
 
 
@@ -110,7 +102,7 @@ public class RentalsController {
    */
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateRental(@PathVariable("id") int id,
+    public RentalResponse updateRental(@PathVariable("id") int id,
                                                @RequestParam("name") String name,
                                                @RequestParam("surface") int surface,
                                                @RequestParam("price") double price,
@@ -126,24 +118,20 @@ public class RentalsController {
         rentalDto.setDescription(description);
 
 
-        Map<String, Object> object = new HashMap<>();
-        boolean succes =false;
 
 
         if (rentalService.checkRentalOwner(id)){
 
-            object.put("message","Rental  Was Updated Successfully!");
-            object.put("succes",succes=true);
-            object.put("data", rentalService.updateRental(rentalDto,id));
-
+            rentalService.updateRental(rentalDto,id);
+            return new RentalResponse("Rental  Was Updated Successfully!");
         }
         else
         {
-            object.put("message","You are Not The Owner Of the rental,So you cann't Update.");
-            object.put("succes",succes=false);
+
+            return new RentalResponse("You are Not The Owner Of the rental,So you cann't Update.");
         }
 
-        return new ResponseEntity<Object>(object,HttpStatus.OK);
+
     }
 
     /*
@@ -151,26 +139,22 @@ public class RentalsController {
      */
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteRental(@PathVariable("id") int id){
+    public RentalResponse deleteRental(@PathVariable("id") int id){
 
-        Map<String, Object> object = new HashMap<>();
-        boolean succes =false;
 
         if (rentalService.checkRentalOwner(id)){
 
             rentalService.deleteRental(id);
-            object.put("message","Rental  Was Deleted Successfully!");
-            object.put("succes",succes=true);
+
+            return new RentalResponse("Rental  Was Deleted Successfully!");
 
 
         }
         else
         {
-            object.put("message","You are Not The Owner Of the rental,So you cann't Delete It.");
-            object.put("succes",succes=false);
+            return new RentalResponse("You are Not The Owner Of the rental,So you cann't Delete It.");
         }
 
-        return new ResponseEntity<Object>(object,HttpStatus.OK);
     }
 
 }

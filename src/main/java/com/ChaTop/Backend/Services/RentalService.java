@@ -8,6 +8,7 @@ import com.ChaTop.Backend.Repositories.RentalRepository;
 import com.ChaTop.Backend.Repositories.UserRepository;
 
 
+import com.ChaTop.Backend.Responses.RentalResponse;
 import com.ChaTop.Backend.Responses.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -32,8 +33,11 @@ public class RentalService {
 
 
 
+    /**
+     * Get all rentals
+     * @return List of rentals
+     */
 
-    /* Get all rentals */
 
     public List<RentalDto> getAllRentals() {
         return rentalRepository.findAll()
@@ -108,9 +112,6 @@ public class RentalService {
 
 
     }
-
-
-
 
 
 

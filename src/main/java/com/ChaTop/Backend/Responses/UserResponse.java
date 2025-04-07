@@ -19,6 +19,7 @@ public class UserResponse {
 
 
 
+
     public Instant getCreated_at() {
         return created_at;
     }
@@ -75,6 +76,8 @@ public class UserResponse {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 
     
 }

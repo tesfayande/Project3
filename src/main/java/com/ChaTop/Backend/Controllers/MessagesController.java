@@ -3,6 +3,8 @@ package com.ChaTop.Backend.Controllers;
 import com.ChaTop.Backend.Dto.MessageDto;
 
 
+import com.ChaTop.Backend.Responses.MessageResponse;
+import com.ChaTop.Backend.Responses.RentalResponse;
 import com.ChaTop.Backend.Services.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,16 +34,13 @@ public class MessagesController {
      * @return Message response
      */
     @Operation(summary = "Send message")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "OK",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = MessageDto.class)
-                            )
-                    }
-            ),
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK", content = {
+            @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MessageDto.class)
+            )
+    }
+    ),
             @ApiResponse(
                     responseCode = "400", description = "Bad request",
                     content = { @Content(mediaType = "application/json",examples = @ExampleObject(value="{}")) }
@@ -52,29 +51,26 @@ public class MessagesController {
             )
     })
     @RequestMapping(value="/messages", method = RequestMethod.POST)
-    public Object sendMessage(@RequestBody MessageDto messageDto){
+    public MessageResponse sendMessage(@RequestBody MessageDto messageDto){
 
 
-        Map<String, Object> object = new HashMap<>();
 
-        /*
-        if (messageService.checkRentalOwner(messageDto.getRental_id())){
+        if (!messageService.checkIfRentalExists(messageDto.getRental_id())){
 
-                object.put("message","The Owner Of the rental cannot send message.");
+            return new MessageResponse("The rental is not found!");
 
-            }
-            else
-            {
-                messageService.sendMessage(messageDto);
-                object.put("message","Message Was Sent Successfully!");
-
-            }
-*/
+        }
+        else
+        {
+            messageService.sendMessage(messageDto);
 
 
-       messageService.sendMessage(messageDto);
-        object.put("message","Message Was Sent Successfully!");
-        return object;
+            return new MessageResponse("Message Was Sent Successfully!");
+
+        }
+
+
+
 
     }
 
