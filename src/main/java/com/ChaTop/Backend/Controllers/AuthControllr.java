@@ -34,15 +34,13 @@ public class AuthControllr {
         if (authService.checkUserEmail(userDto.getEmail())){
 
 
+            return new ResponseEntity<>(new MessageResponse("Email with:"+ userDto.getEmail() + " Existes"),HttpStatus.OK);
 
-            return new ResponseEntity<MessageResponse>(new MessageResponse("Email with:"+ userDto.getEmail() + " Existes"),HttpStatus.OK);
-
-            //return new MessageResponse("Email with:"+ userDto.getEmail() + " Existes");
 
         } else if (authService.checkUserName(userDto.getName())) {
 
 
-            return new ResponseEntity<MessageResponse>(new MessageResponse("Name with:"+ userDto.getName() + " Existes"),HttpStatus.OK);
+            return new ResponseEntity<>(new MessageResponse("Name with:"+ userDto.getName() + " Existes"),HttpStatus.OK);
 
 
         } else{
